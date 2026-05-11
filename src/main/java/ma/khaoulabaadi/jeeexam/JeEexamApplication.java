@@ -24,44 +24,44 @@ public class JeEexamApplication {
         SpringApplication.run(JeEexamApplication.class, args);
     }
 
-}
-@Bean
-CommandLineRunner commandLineRunner(CustomerRepository customerRepo,
-                                    ContractRepository contractRepo,
-                                    PaymentRepository paymentRepo) {
-    return args -> {
-        // Clients
+    @Bean
+    CommandLineRunner commandLineRunner(CustomerRepository customerRepo,
+                                        ContractRepository contractRepo,
+                                        PaymentRepository paymentRepo) {
+        return args -> {
 
-        Stream.of("Ali Benali", "Sara Chraibi", "Youssef Idrissi").forEach(name -> {
-            Customer c = new Customer();
-            c.setName(name);
-            c.setEmail(name.replace(" ", ".").toLowerCase() + "@gmail.com");
-            customerRepo.save(c);
-        });
+            Stream.of("Ali Benali", "Sara Chraibi", "Youssef Idrissi").forEach(name -> {
+                Customer c = new Customer();
+                c.setName(name);
+                c.setEmail(name.replace(" ", ".").toLowerCase() + "@gmail.com");
+                customerRepo.save(c);
+            });
 
-        // Contrats auto
-        customerRepo.findAll().forEach(customer -> {
-            AutoContract auto = new AutoContract();
-            auto.setSubscriptionDate(new Date());
-            auto.setStatus(ContractStatus.EN_COURS);
-            auto.setCotisation(500 + Math.random() * 1000);
-            auto.setDuration(12);
-            auto.setCoverageRate(80);
-            auto.setImmatriculation("12345-A-" + (int)(Math.random()*99));
-            auto.setBrand("Renault");
-            auto.setModel("Clio");
-            auto.setCustomer(customer);
-            InsuranceContract saved = contractRepo.save(auto);
 
-            // Paiements
-            for (int i = 0; i < 3; i++) {
-                Payment p = new Payment();
-                p.setDate(new Date());
-                p.setAmount(saved.getCotisation() / 12);
-                p.setType(PaymentType.MENSUALITE);
-                p.setContract(saved);
-                paymentRepo.save(p);
-            }
-        });
-    };
+            customerRepo.findAll().forEach(customer -> {
+                AutoContract auto = new AutoContract();
+                auto.setSubscriptionDate(new Date());
+                auto.setStatus(ContractStatus.EN_COURS);
+                auto.setCotisation(500 + Math.random() * 1000);
+                auto.setDuration(12);
+                auto.setCoverageRate(80);
+                auto.setImmatriculation("12345-A-" + (int)(Math.random() * 99));
+                auto.setBrand("Renault");
+                auto.setModel("Clio");
+                auto.setCustomer(customer);
+                InsuranceContract saved = contractRepo.save(auto);
+
+
+                for (int i = 0; i < 3; i++) {
+                    Payment p = new Payment();
+                    p.setDate(new Date());
+                    p.setAmount(saved.getCotisation() / 12);
+                    p.setType(PaymentType.MENSUALITE);
+                    p.setContract(saved);
+                    paymentRepo.save(p);
+                }
+            });
+        };
+    }
+
 }

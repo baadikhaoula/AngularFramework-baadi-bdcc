@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ma.khaoulabaadi.jeeexam.enums.PaymentType;
 
 import java.util.Date;
 
